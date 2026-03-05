@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import Upload from "./pages/Upload";
 import Files from "./pages/Files";
 import PublicFile from "./pages/PublicFile";
+import PublicFilesList from "./pages/PublicFilesList";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/f/:slug" element={<PublicFile />} />
+        <Route path="/shared" element={<PublicFilesList />} />
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />

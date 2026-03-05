@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "../api/axios";
 import { Link } from "react-router-dom";
-import { Trash2, ExternalLink, Edit, QrCode as QrIcon, X } from "lucide-react";
+import { Trash2, ExternalLink, Edit, QrCode as QrIcon, X, Share2, ScanLine } from "lucide-react";
 import QRCode from "qrcode";
 
 export default function Files() {
   const [files, setFiles] = useState<any[]>([]);
   const [editingFile, setEditingFile] = useState<any>(null);
-  const [qrModal, setQrModal] = useState<string | null>(null);
+  const [qrModal, setQrModal] = useState<{ url: string, title: string } | null>(null);
 
   useEffect(() => {
     fetchFiles();
@@ -27,12 +27,27 @@ export default function Files() {
   const handleShowQr = async (slug: string) => {
     const url = `${window.location.origin}/f/${slug}`;
     const dataUrl = await QRCode.toDataURL(url);
-    setQrModal(dataUrl);
+    setQrModal({ url: dataUrl, title: "Fichier unique" });
+  };
+
+  const handleShareAll = async () => {
+    const url = `${window.location.origin}/shared`;
+    const dataUrl = await QRCode.toDataURL(url);
+    setQrModal({ url: dataUrl, title: "Tous les fichiers partagés" });
   };
 
   return (
     <div>
-      <h1 className="mb-8 text-3xl font-bold">Mes Fichiers</h1>
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-3xl font-bold">Mes Fichiers</h1>
+        <button
+          onClick={handleShareAll}
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition"
+        >
+          <ScanLine size={20} />
+          Partager tous les fichiers
+        </button>
+      </div>
       <div className="overflow-hidden rounded-lg border bg-white shadow-sm">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
@@ -88,8 +103,10 @@ export default function Files() {
       {qrModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" onClick={() => setQrModal(null)}>
           <div className="rounded-lg bg-white p-6" onClick={e => e.stopPropagation()}>
-            <img src={qrModal} alt="QR Code" className="h-64 w-64" />
-            <button className="mt-4 w-full rounded bg-blue-600 py-2 text-white" onClick={() => setQrModal(null)}>Fermer</button>
+            <h3 className="text-lg font-bold mb-4 text-center">{qrModal.title}</h3>
+            <img src={qrModal.url} alt="QR Code" className="h-64 w-64 mx-auto" />
+            <p className="mt-2 text-sm text-gray-500 text-center">Faites scanner ce code pour partager.</p>
+            <button className="mt-4 w-full rounded bg-blue-600 py-2 text-white hover:bg-blue-700 transition" onClick={() => setQrModal(null)}>Fermer</button>
           </div>
         </div>
       )}

@@ -9,6 +9,7 @@ export const login = async (req: Request, res: Response): Promise<any> => {
   const { username, password } = req.body;
 
   try {
+    console.log(`Attempting login for: ${username}`);
     let user = await prisma.user.findUnique({ where: { username } });
 
     // Seed first user if none exists

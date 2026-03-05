@@ -41,7 +41,7 @@ export const uploadFile = async (req: AuthenticatedRequest, res: Response): Prom
 };
 
 export const updateFile = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
-  const { id } = req.params;
+  const id = req.params.id as string;
   const { title, description, tags } = req.body;
   const newFile = req.file;
 
@@ -89,19 +89,41 @@ export const listFiles = async (req: Request, res: Response) => {
   }
 };
 
+export const listPublicFiles = async (req: Request, res: Response) => {
+  try {
+    const files = await prisma.file.findMany({
+      orderBy: { createdAt: "desc" },
+      select: {
+        slug: true,
+        title: true,
+        description: true,
+        tags: true,
+        fileName: true,
+        fileSize: true,
+        mimeType: true,
+        downloadCount: true,
+        createdAt: true,
+      }
+    });
+    res.json(files);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 export const getFileDetails = async (req: Request, res: Response): Promise<any> => {
-    const { slug } = req.params;
-    try {
-        const file = await prisma.file.findUnique({ where: { slug } });
-        if (!file) return res.status(404).json({ message: "File not found" });
-        res.json(file);
-    } catch (error) {
-        res.status(500).json({ message: "Server error" });
-    }
+  const slug = req.params.slug as string;
+  try {
+    const file = await prisma.file.findUnique({ where: { slug } });
+    if (!file) return res.status(404).json({ message: "File not found" });
+    res.json(file);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
 }
 
 export const downloadFile = async (req: Request, res: Response): Promise<any> => {
-  const { slug } = req.params;
+  const slug = req.params.slug as string;
 
   try {
     const file = await prisma.file.findUnique({ where: { slug } });
@@ -136,7 +158,7 @@ export const downloadFile = async (req: Request, res: Response): Promise<any> =>
 };
 
 export const deleteFile = async (req: Request, res: Response): Promise<any> => {
-  const { id } = req.params;
+  const id = req.params.id as string;
 
   try {
     const file = await prisma.file.findUnique({ where: { id } });
@@ -155,16 +177,16 @@ export const deleteFile = async (req: Request, res: Response): Promise<any> => {
 };
 
 export const getStats = async (req: Request, res: Response) => {
-    try {
-        const fileCount = await prisma.file.count();
-        const totalDownloads = await prisma.file.aggregate({
-            _sum: { downloadCount: true }
-        });
-        res.json({
-            fileCount,
-            totalDownloads: totalDownloads._sum.downloadCount || 0
-        });
-    } catch (error) {
-        res.status(500).json({ message: "Server error" });
-    }
+  try {
+    const fileCount = await prisma.file.count();
+    const totalDownloads = await prisma.file.aggregate({
+      _sum: { downloadCount: true }
+    });
+    res.json({
+      fileCount,
+      totalDownloads: totalDownloads._sum.downloadCount || 0
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
 }
