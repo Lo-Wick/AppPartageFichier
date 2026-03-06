@@ -36,12 +36,13 @@ const PublicFilesList = () => {
     }, []);
 
     const handleDownload = (slug: string, fileName: string) => {
-        // Ideally the backend URL should be an env variable exported from somewhere
-        window.location.href = `http://localhost:5000/api/files/download/${slug}`;
+        const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+        window.location.href = `${API_URL}/files/download/${slug}`;
     };
 
     const handleShowQr = async (slug: string, title: string) => {
-        const url = `http://localhost:5000/api/files/download/${slug}`;
+        const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+        const url = `${API_URL}/files/download/${slug}`;
         const dataUrl = await QRCode.toDataURL(url);
         setQrModal({ url: dataUrl, title: `Télécharger: ${title}` });
     };
