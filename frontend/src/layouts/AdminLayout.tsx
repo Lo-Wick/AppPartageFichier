@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "../api/axios";
 import { Link, useNavigate, Outlet } from "react-router-dom";
 import { LayoutDashboard, FileUp, Files, LogOut } from "lucide-react";

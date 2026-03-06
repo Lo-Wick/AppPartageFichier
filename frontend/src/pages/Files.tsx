@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "../api/axios";
 import { Link } from "react-router-dom";
-import { Trash2, ExternalLink, Edit, QrCode as QrIcon, X, Share2, ScanLine } from "lucide-react";
+import { Trash2, ExternalLink, Edit, QrCode as QrIcon, X, ScanLine } from "lucide-react";
 import QRCode from "qrcode";
 
 export default function Files() {

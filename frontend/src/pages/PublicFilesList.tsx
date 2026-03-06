@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "../api/axios";
 import { Download, File as FileIcon, Loader2, AlertCircle, QrCode as QrIcon } from "lucide-react";
 import QRCode from "qrcode";
@@ -35,7 +35,7 @@ const PublicFilesList = () => {
         fetchPublicFiles();
     }, []);
 
-    const handleDownload = (slug: string, fileName: string) => {
+    const handleDownload = (slug: string) => {
         const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
         window.location.href = `${API_URL}/files/download/${slug}`;
     };
@@ -123,7 +123,7 @@ const PublicFilesList = () => {
                                             Scanner
                                         </button>
                                         <button
-                                            onClick={() => handleDownload(file.slug, file.fileName)}
+                                            onClick={() => handleDownload(file.slug)}
                                             className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors"
                                         >
                                             <Download className="w-4 h-4" />
